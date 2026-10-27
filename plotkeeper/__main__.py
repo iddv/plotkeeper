@@ -15,6 +15,7 @@ CONFIG_KEYS = {
     "PLOTKEEPER_SESSION_SECRET": "",
     "PLOTKEEPER_LOG_LEVEL": "INFO",
     "PLOTKEEPER_TIMEZONE": "",
+    "PLOTKEEPER_COOKIE_SECURE": "false",
 }
 
 
@@ -75,7 +76,8 @@ def cmd_start(cfg, args):
     from .web import App, serve
     conn = open_db(cfg)
     host, port = cfg["PLOTKEEPER_HOST"], int(cfg["PLOTKEEPER_PORT"])
-    app = App(store.db_path(cfg["PLOTKEEPER_DATA_DIR"]), session_secret(cfg), server_timezone())
+    app = App(store.db_path(cfg["PLOTKEEPER_DATA_DIR"]), session_secret(cfg), server_timezone(),
+              cookie_secure=cfg["PLOTKEEPER_COOKIE_SECURE"].strip().lower() in ("true", "1", "yes"))
     try:
         server = serve(app, host, port)
     except OSError as exc:

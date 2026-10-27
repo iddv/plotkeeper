@@ -7,3 +7,6 @@ PLOTKEEPER_SESSION_SECRET=
 PLOTKEEPER_LOG_LEVEL=INFO
 # Leave empty to use the garden time zone chosen at setup.
 PLOTKEEPER_TIMEZONE=
+
+# Set to true when served over HTTPS so cookies are marked Secure.
+PLOTKEEPER_COOKIE_SECURE=false

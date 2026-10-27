@@ -58,7 +58,7 @@ The product was started as its README says and probed while running.
 | injection | path traversal | n/a | no file name or path parameter over HTTP; backup/restore paths are local CLI arguments |
 | injection | open redirect | pass | no next=/return_to=; error redirects use only the Referer path and need a valid CSRF token |
 | authentication | 5 wrong passwords then the right one | pass | 'Too many failed attempts. Try again later.'; correct password refused while locked |
-| authentication | session cookie flags | pass | pk_session: HttpOnly; SameSite=Lax; no Secure (served over plain HTTP, TLS left to a proxy) |
+| authentication | session cookie flags | pass | pk_session: HttpOnly; SameSite=Lax; no Secure by default (plain HTTP); with PLOTKEEPER_COOKIE_SECURE=true both cookies get Secure (test_session_cookie_secure_option) |
 | authentication | session ends on logout | pass | after POST /logout, /plots redirects to /login (row deleted server-side) |
 | authentication | session ends on password change | fail | a second session of the same user kept working (200) after the password change |
 | authentication | password storage | pass | scrypt n=2^14 r=8 p=1 with 16-byte random salt, constant-time compare |
@@ -112,7 +112,7 @@ The product was started as its README says and probed while running.
 ## Known limits
 
 - This was a time-boxed review of v1 by one reviewer with the code and a running copy: scripted probes and manual checks, not a penetration test or an external audit.
-- TLS is left to a reverse proxy and was not tested; the session cookie has no Secure flag, which matters only if served over HTTPS without the proxy setting it.
+- TLS is left to a reverse proxy and was not tested; the session cookie has no Secure flag unless the operator sets `PLOTKEEPER_COOKIE_SECURE=true`, which should be done when served over HTTPS (test: `test_session_cookie_secure_option`).
 - Brute force of the one-time setup code was not timed; the code has 48 random bits and only matters before the first Admin exists.
 - Login lockout is per username; there is no per-IP rate limit, so an attacker can lock out known staff accounts for 15 minutes (by design per the spec).
 - plotkeeper.sh install-service (systemd, sudo) was not run.

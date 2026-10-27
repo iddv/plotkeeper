@@ -114,6 +114,7 @@ Environment variables take precedence over the file.
 | `PLOTKEEPER_DATA_DIR` | `./data` | Folder holding all data |
 | `PLOTKEEPER_SESSION_SECRET` | generated into `DATA_DIR/session_secret` | Key used to sign session cookies |
 | `PLOTKEEPER_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING` or `ERROR` |
+| `PLOTKEEPER_COOKIE_SECURE` | `false` | Set to `true` when served over HTTPS: the session and sign-in cookies are then marked `Secure`. Leave `false` for plain HTTP, or browsers will not send them. |
 | `PLOTKEEPER_TIMEZONE` | the garden time zone chosen at setup | Overrides the time zone used to show dates |
 
 Admins can change the garden's rules on the in-app **Settings** page. Every change is written to the audit log.
