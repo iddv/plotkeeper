@@ -1108,7 +1108,8 @@ def audit_page(req):
 # ------------------------------------------------------------------ application
 
 class App:
-    def __init__(self, db_file, secret, default_tz="UTC"):
+    def __init__(self, db_file, secret, default_tz="UTC", cookie_secure=False):
+        self.cookie_secure = cookie_secure
         self.db_file, self.secret, self.default_tz = db_file, secret.encode(), default_tz
 
     def sign(self, token):
@@ -1163,10 +1164,11 @@ class App:
             resp.status = 500
         finally:
             req.conn.close()
+        secure = "; Secure" if self.cookie_secure else ""
         if new_pre:
-            resp.headers.append(("Set-Cookie", f"pk_pre={new_pre}; Path=/; HttpOnly; SameSite=Lax"))
+            resp.headers.append(("Set-Cookie", f"pk_pre={new_pre}; Path=/; HttpOnly; SameSite=Lax{secure}"))
         for c in req.set_cookies:
-            resp.headers.append(("Set-Cookie", c))
+            resp.headers.append(("Set-Cookie", c + secure))
         resp.headers += [("X-Frame-Options", "DENY"), ("X-Content-Type-Options", "nosniff"),
                          ("Cache-Control", "no-store")]
         return resp
